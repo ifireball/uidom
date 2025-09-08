@@ -1,0 +1,10 @@
+[project]
+name = "uidom"
+version = "0.1.0"
+description = "Dom-like model for UI"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["PyGObject>=3.46.0"]
+
+[dependency-groups]
+dev = ["pytest>=8.4.2", "pytest-bdd>=8.1.0"]
