@@ -1,0 +1,7 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/.vscode/mise-tools/python",
+    "cSpell.words": [
+        "pytest",
+        "uidom"
+    ]
+}
