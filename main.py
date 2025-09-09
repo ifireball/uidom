@@ -1,7 +1,8 @@
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk
 import time
+from gi.repository import GLib
 
 def test_window_display(window):
     """Test if the window is actually being displayed"""
@@ -15,13 +16,12 @@ def test_window_display(window):
     print(f"Window size: {allocation.width}x{allocation.height}")
     
     # Check if window is on screen
-    screen = window.get_screen()
-    if screen:
-        print(f"Window on screen: {screen.get_display() is not None}")
+    display = window.get_display()
+    if display:
+        print(f"Window on display: {display is not None}")
     
-    # Test window state
-    state = window.get_state()
-    print(f"Window state: {state}")
+    is_active = window.is_active() if hasattr(window, "is_active") else "N/A"
+    print(f"Window is active: {is_active}")
     
     return window.get_visible() and window.get_mapped()
 
@@ -36,13 +36,15 @@ def main():
     # window.connect("destroy", lambda w: None)
     
     # Show the window
-    window.show_all()
+    window.present()
     print("Window created and shown...")
     
     # Process events multiple times to ensure window is displayed
     for i in range(2):  # Give GTK several chances to display the window
-        while Gtk.events_pending():
-            Gtk.main_iteration()
+        # In Gtk 4, events_pending() and main_iteration() are removed.
+        # Instead, you can use GLib's main context iteration.
+        while GLib.MainContext.default().iteration(False):
+            pass
         time.sleep(0.01)  # Small delay to allow rendering
     
     print("Window should be visible now!")
