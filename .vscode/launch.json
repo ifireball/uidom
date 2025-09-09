@@ -10,6 +10,17 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Python Debugger: Current File (With Pytest)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.venv/bin/pytest",
+            "console": "integratedTerminal",
+            "args": [
+                "${file}"
+            ],
+            "justMyCode": false
         }
     ]
 }

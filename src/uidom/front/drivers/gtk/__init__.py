@@ -4,6 +4,8 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('GioUnix', '2.0')
 from gi.repository import Gtk
 from gi.repository import GLib
+from functools import partial
+from psygnal import Signal
 
 
 class GtkWindowSet:
@@ -14,8 +16,8 @@ class GtkWindowSet:
         self.windows.add(window)
 
     def remove(self, window: Gtk.Window) -> None:
-        window.destroy()
         self.windows.remove(window)
+        window.destroy()
 
     def __contains__(self, window: Gtk.Window) -> bool:
         return window in self.windows
@@ -35,3 +37,4 @@ def realize(application: Application) -> None:
         gtk_window = Gtk.Window(title=window.title)
         gtk_window.present()
         gtk_windows.add(gtk_window)
+        window.closed.connect(partial(gtk_windows.remove, gtk_window))
