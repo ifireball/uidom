@@ -32,7 +32,19 @@ class GtkWindowSet:
 gtk_windows = GtkWindowSet()
 
 
+current_application = None
+
+
 def realize(application: Application) -> None:
+    global current_application
+    if current_application is not None:
+        current_application.close()
+    current_application = application
+
+    for gtk_window in list(gtk_windows):
+        gtk_window.destroy()
+        gtk_windows.remove(gtk_window)
+
     for window in application.windows:
         gtk_window = Gtk.Window(title=window.title)
         gtk_window.present()
