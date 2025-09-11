@@ -1,4 +1,4 @@
-from uidom.front import Application
+from uidom.front import Application, Window, Button, Widget
 import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('GioUnix', '2.0')
@@ -50,3 +50,17 @@ def realize(application: Application) -> None:
         gtk_window.present()
         gtk_windows.add(gtk_window)
         window.closed.connect(partial(gtk_windows.remove, gtk_window))
+        realize_children(window, gtk_window)
+
+def realize_children(parent: Window, gtk_parent: Gtk.Window) -> None:
+    if len(parent.children) == 1:
+        child = next(iter(parent.children))
+        gtk_parent.set_child(realize_widget(child))
+
+def realize_widget(widget: Widget) -> Gtk.Widget:
+    match widget:
+        case Button():
+            return Gtk.Button(label=widget.label)
+        case _:
+            raise ValueError(f"Unknown widget: {widget}")
+    
