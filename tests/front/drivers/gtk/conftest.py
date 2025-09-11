@@ -2,6 +2,8 @@ import pytest
 import time
 from typing import Callable
 from uidom.front.drivers.gtk import GLib
+from uidom.front import Application
+from uidom.front.drivers import gtk
 
 
 @pytest.fixture
@@ -12,3 +14,12 @@ def run_gtk_loop() -> Callable[[], None]:
                 pass
             time.sleep(0.01)
     return run_loop
+
+
+@pytest.fixture
+def dom_application(run_gtk_loop: Callable[[], None]) -> Application:
+    try:
+        yield Application()
+    finally:
+        gtk.realize(Application())
+        run_gtk_loop()

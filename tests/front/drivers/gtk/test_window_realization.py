@@ -15,11 +15,7 @@ def random_title() -> str:
 @pytest.fixture
 def dom_window(random_title: str, run_gtk_loop: Callable[[], None]) -> Window:
     """A UI DOM window with a random title."""
-    try:
-        yield Window(title=random_title)
-    finally:
-        gtk.realize(Application())
-        run_gtk_loop()
+    return Window(title=random_title)
 
 @given("a UI DOM structure with a Window")
 def given_a_ui_dom_structure_with_a_window(dom_application: Application, dom_window: Window) -> None:
