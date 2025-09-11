@@ -6,7 +6,7 @@ from typing import Callable
 from uidom.front.drivers import gtk
 from unittest.mock import MagicMock
 
-scenarios("features/dom_realization.feature")
+scenarios("features/window_realization.feature")
 
 @pytest.fixture
 def random_title() -> str:

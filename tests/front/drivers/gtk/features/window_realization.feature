@@ -1,5 +1,5 @@
-Feature: UI DOM Realization
-    Realize UI DOM structures into Gtk widgets on screen.
+Feature: UI  Window Realization
+    Realize Windows in UI DOM structures into Gtk widgets on screen.
 
     Scenario: Realize a Window
         Given a UI DOM structure with a Window
