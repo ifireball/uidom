@@ -1,23 +1,19 @@
 from pytest_bdd import given, when, then, scenarios
 from uidom.front import Application, Window
-import random
 import pytest
-from typing import Callable
+from typing import Callable, Hashable
 from uidom.front.drivers import gtk
 from unittest.mock import MagicMock
 
 scenarios("features/window_realization.feature")
 
 @pytest.fixture
-def random_title() -> str:
-    return f"Window {random.randint(1, 1000000)}"
-
-@pytest.fixture
-def dom_window(random_title: str, run_gtk_loop: Callable[[], None]) -> Window:
+def dom_window(random_title: Callable[[Hashable], str], run_gtk_loop: Callable[[], None]) -> Window:
     """A UI DOM window with a random title."""
-    return Window(title=random_title)
+    return Window(title=random_title("Window"))
 
 @given("a UI DOM structure with a Window")
+@given("a UI DOM structure with a Window with some random title")
 def given_a_ui_dom_structure_with_a_window(dom_application: Application, dom_window: Window) -> None:
     dom_application.windows.add(dom_window)
 
@@ -34,6 +30,12 @@ def then_the_window_should_be_visible_on_screen(dom_application: Application, do
     assert gtk_window.get_visible()
     assert gtk_window.get_mapped()
     assert gtk_window.get_realized()
+
+@then("the Window should have the random title")
+def then_the_window_should_have_the_random_title(random_title: Callable[[Hashable], str]) -> None:
+    assert len(gtk.gtk_windows) == 1
+    gtk_window = next(iter(gtk.gtk_windows))
+    assert gtk_window.get_title() == random_title("Window")
 
 @when("the Window is closed")
 def when_the_window_is_closed(dom_application: Application, dom_window: Window, run_gtk_loop: Callable[[], None]) -> None:

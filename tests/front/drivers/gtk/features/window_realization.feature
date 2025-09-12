@@ -2,9 +2,10 @@ Feature: UI  Window Realization
     Realize Windows in UI DOM structures into Gtk widgets on screen.
 
     Scenario: Realize a Window
-        Given a UI DOM structure with a Window
+        Given a UI DOM structure with a Window with some random title
         When the structure is realized
         Then the Window should be visible on screen
+        And the Window should have the random title
         When the Window is closed
         Then the Window should be removed from the structure
         And the Window should be removed from the screen
