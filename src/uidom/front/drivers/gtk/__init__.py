@@ -60,7 +60,9 @@ def realize_children(parent: Window, gtk_parent: Gtk.Window) -> None:
 def realize_widget(widget: Widget) -> Gtk.Widget:
     match widget:
         case Button():
-            return Gtk.Button(label=widget.text)
+            button = Gtk.Button(label=widget.text)
+            button.connect("clicked", widget.clicked.emit)
+            return button
         case _:
             raise ValueError(f"Unknown widget: {widget}")
     

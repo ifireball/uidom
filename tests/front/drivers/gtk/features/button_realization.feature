@@ -6,3 +6,10 @@ Feature: UI Button Realization
         When the structure is realized
         Then the Button should be visible in the Window
         And the Button should have the random text
+
+    Scenario: Realize a Button with a click callback
+        Given a UI DOM structure with a Window and a Button with a click callback
+        When the structure is realized
+        Then the Button should be visible in the Window
+        When the Button is clicked
+        Then the callback should be called

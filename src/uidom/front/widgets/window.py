@@ -1,6 +1,6 @@
 from psygnal import Signal
 from collections.abc import Iterable
-from psygnal.containers import EventedSet
+from psygnal.containers import EventedList
 from .widget import Widget
 
 class Window:
@@ -11,8 +11,7 @@ class Window:
     
     def __init__(self, title: str, children: Iterable[Widget] = []):
         self.title = title
-        self.children = EventedSet(children)
-        self.children.union(children)
+        self.children = EventedList(children)
 
     def close(self) -> None:
         self.closed.emit()
