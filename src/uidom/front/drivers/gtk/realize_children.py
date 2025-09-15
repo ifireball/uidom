@@ -1,5 +1,5 @@
 from .driver import Gtk
-from uidom.front import Window, Button, Widget
+from uidom.front import Window, Button, Widget, StringDisplay
 
 
 def realize_children(parent: Window, gtk_parent: Gtk.Window) -> None:
@@ -20,6 +20,9 @@ def realize_widget(widget: Widget) -> Gtk.Widget:
             button = Gtk.Button(label=widget.text)
             button.connect("clicked", widget.clicked.emit)
             return button
+        case StringDisplay():
+            label = Gtk.Label(label=widget.text)
+            return label
         case _:
             raise ValueError(f"Unknown widget: {widget}")
     
