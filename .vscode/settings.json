@@ -1,6 +1,8 @@
 {
     "python.defaultInterpreterPath": "${workspaceFolder}/.vscode/mise-tools/python",
     "cSpell.words": [
+        "cfparse",
+        "datatable",
         "psygnal",
         "pytest",
         "uidom"

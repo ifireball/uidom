@@ -1,5 +1,5 @@
 from pytest_bdd import given, when, then, scenarios, parsers
-from uidom.front import Application, Window, Button
+from uidom.front import Application, Window, Button, GridLayout
 from uidom.front.drivers import gtk
 from typing import Callable, Hashable, Iterable
 from uidom.front.drivers.gtk import Gtk
@@ -36,3 +36,31 @@ def then_the_buttons_should_be_laid_out_vertically(dom_application: Application,
         assert child.get_mapped()
         assert child.get_realized()
         assert child.get_label() == random_title(f"Button {i}")
+
+@given("the window layout is set to grid")
+def given_the_window_layout_is_set_to_grid(dom_application: Application, random_title: Callable[[Hashable], str]) -> None:
+    dom_window = next(iter(dom_application.windows))
+    dom_window.layout = GridLayout()
+
+@then("the buttons should be laid out in the following positions:")
+def then_the_buttons_should_be_laid_out_in_the_following_positions(dom_application: Application, random_title: Callable[[Hashable], str], datatable: Iterable[Iterable[str]]) -> None:
+    assert len(gtk.gtk_windows) == 1
+    gtk_window = next(iter(gtk.gtk_windows))
+    gtk_grid = gtk_window.get_child()
+    assert gtk_grid is not None
+    assert isinstance(gtk_grid, Gtk.Grid)
+    for row, row_data in enumerate(datatable):
+        for col, title_key in enumerate(row_data):
+            if title_key == "":
+                continue
+            gtk_child = gtk_grid.get_child_at(col, row)
+            assert gtk_child is not None
+            assert gtk_child.get_label() == random_title(title_key)
+            assert gtk_child.get_visible()
+            assert gtk_child.get_mapped()
+            assert gtk_child.get_realized()
+
+@given(parsers.cfparse("the window layout is set to grid with size {size:int}", extra_types={"int": int}))
+def given_the_window_layout_is_set_to_grid_with_size(dom_application: Application, size: int) -> None:
+    dom_window = next(iter(dom_application.windows))
+    dom_window.layout = GridLayout(size=size)
