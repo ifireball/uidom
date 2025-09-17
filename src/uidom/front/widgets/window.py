@@ -2,8 +2,8 @@ from psygnal import Signal
 from collections.abc import Iterable
 from psygnal.containers import EventedList
 from .widget import Widget
-from ..layouts.layout import Layout
-from ..layouts.column import ColumnLayout
+from uidom.model.layouts import Layout, ColumnLayout
+
 
 class Window:
     """

@@ -1,5 +1,6 @@
 from pytest_bdd import given, when, then, scenarios, parsers
-from uidom.front import Application, Window, Button, GridLayout
+from uidom.front import Application, Window, Button
+from uidom.model.layouts import GridLayout
 from uidom.front.drivers import gtk
 from typing import Callable, Hashable, Iterable
 from uidom.front.drivers.gtk import Gtk

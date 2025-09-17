@@ -1,5 +1,6 @@
 from .driver import Gtk
-from uidom.front import Window, Button, Widget, StringDisplay, ColumnLayout, GridLayout
+from uidom.front import Window, Button, Widget, StringDisplay
+from uidom.model.layouts import ColumnLayout, GridLayout
 from typing import Iterable
 
 
