@@ -1,6 +1,9 @@
 from dataclasses import dataclass
-from typing import FrozenSet
+from typing import FrozenSet, TypeVar
 from .window import Window
+from .utils import Visitor
+
+T = TypeVar("T")
 
 @dataclass(frozen=True)
 class Application:
@@ -9,3 +12,5 @@ class Application:
     """
     windows: FrozenSet[Window] = frozenset()
 
+    def visit(self, visitor: Visitor[T]) -> T:
+        return visitor(self, *(window.visit(visitor) for window in self.windows))   
