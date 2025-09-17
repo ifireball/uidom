@@ -9,5 +9,5 @@ class Window:
     Represents a window.
     """
     title: str = ""
-    widgets: FrozenSet[Widget] = frozenset()
+    widgets: tuple[Widget, ...] = ()
     layout: Layout = ColumnLayout()
