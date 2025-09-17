@@ -1,4 +1,4 @@
-from .driver import Gtk
+from .driver import Gtk  # type: ignore
 from uidom.front import Window, Button, Widget, StringDisplay
 from uidom.model.layouts import ColumnLayout, GridLayout
 from typing import Iterable

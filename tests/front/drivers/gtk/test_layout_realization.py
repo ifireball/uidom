@@ -3,7 +3,7 @@ from uidom.front import Application, Window, Button
 from uidom.model.layouts import GridLayout
 from uidom.front.drivers import gtk
 from typing import Callable, Hashable, Iterable
-from uidom.front.drivers.gtk import Gtk
+from uidom.front.drivers.gtk import Gtk  # type: ignore
 
 scenarios("features/layout_realization.feature")
 

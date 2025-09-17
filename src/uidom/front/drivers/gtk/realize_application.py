@@ -1,4 +1,4 @@
-from .driver import Gtk
+from .driver import Gtk  # type: ignore
 from functools import partial
 from uidom.front import Application
 from .realize_children import realize_children

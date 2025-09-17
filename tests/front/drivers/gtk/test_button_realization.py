@@ -2,6 +2,7 @@ from pytest_bdd import given, when, then, scenarios
 from uidom.front import Application, Window, Button
 from uidom.front.drivers import gtk
 from typing import Callable, Hashable
+from unittest.mock import MagicMock
 
 scenarios("features/button_realization.feature")
 
@@ -44,5 +45,5 @@ def when_the_button_is_clicked() -> None:
     gtk_button.emit("clicked")
 
 @then("the callback should be called")
-def then_the_callback_should_be_called(dom_application: Application, random_callback: Callable[[Hashable], Callable[[], None]]) -> None:
+def then_the_callback_should_be_called(dom_application: Application, random_callback: Callable[[Hashable], MagicMock]) -> None:
     assert random_callback("Button").call_count == 1
