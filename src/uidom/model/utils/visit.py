@@ -9,5 +9,5 @@ class Visitable(Protocol):
         ...
 
 class Visitor(Protocol[T]):
-    def __call__(self, visitable: Visitable, *args: T) -> T:
+    def __call__(self, visitable: Visitable, /, *args: T) -> T:
         ...
