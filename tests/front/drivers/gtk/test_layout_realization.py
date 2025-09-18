@@ -3,7 +3,7 @@ from uidom.front import Application, Window, Button
 from uidom.model.layouts import GridLayout
 from uidom.front.drivers import gtk
 from typing import Callable, Hashable, Iterable
-from uidom.front.drivers.gtk import Gtk  # type: ignore
+from uidom.front.drivers.gtk import Gtk
 
 scenarios("features/layout_realization.feature")
 
@@ -27,6 +27,7 @@ def then_the_buttons_should_be_laid_out_vertically(dom_application: Application,
     dom_window = next(iter(dom_application.windows))
     gtk_box = gtk_window.get_child()
     assert gtk_box is not None
+    assert isinstance(gtk_box, Gtk.Box)
     assert gtk_box.get_orientation() == Gtk.Orientation.VERTICAL
     gtk_box_children = list(iterate_gtk_children(gtk_box))
     assert len(gtk_box_children) == len(dom_window.children)
@@ -56,6 +57,7 @@ def then_the_buttons_should_be_laid_out_in_the_following_positions(dom_applicati
                 continue
             gtk_child = gtk_grid.get_child_at(col, row)
             assert gtk_child is not None
+            assert isinstance(gtk_child, Gtk.Button)
             assert gtk_child.get_label() == random_title(title_key)
             assert gtk_child.get_visible()
             assert gtk_child.get_mapped()

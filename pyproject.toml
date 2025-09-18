@@ -10,8 +10,17 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["pytest>=8.4.2", "pytest-bdd>=8.1.0"]
+dev = [
+    "pygobject-stubs>=2.13.0",
+    "pytest>=8.4.2",
+    "pytest-bdd>=8.1.0",
+]
 
 [build-system]
 requires = ["uv_build>=0.1.0"]
 build-backend = "uv_build"
+
+[tool.uv]
+build-constraint-dependencies = [
+    "pygobject-stubs[Gtk4,Gdk4]",
+]

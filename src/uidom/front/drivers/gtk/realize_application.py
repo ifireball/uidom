@@ -1,12 +1,13 @@
-from .driver import Gtk  # type: ignore
+from .driver import Gtk
 from functools import partial
 from uidom.front import Application
 from .realize_children import realize_children
+from typing import Iterator
 
 
 class GtkWindowSet:
-    def __init__(self):
-        self.windows = set()
+    def __init__(self) -> None:
+        self.windows = set[Gtk.Window]()
     
     def add(self, window: Gtk.Window) -> None:
         self.windows.add(window)
@@ -18,17 +19,17 @@ class GtkWindowSet:
     def __contains__(self, window: Gtk.Window) -> bool:
         return window in self.windows
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Gtk.Window]:
         return iter(self.windows)
     
     def __len__(self) -> int:
         return len(self.windows)
     
 
-gtk_windows = GtkWindowSet()
+gtk_windows: GtkWindowSet = GtkWindowSet()
 
 
-current_application = None
+current_application: Application | None = None
 
 
 def realize(application: Application) -> None:

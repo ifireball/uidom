@@ -3,6 +3,7 @@ from uidom.front import Application, Window, Button
 from uidom.front.drivers import gtk
 from typing import Callable, Hashable
 from unittest.mock import MagicMock
+from uidom.front.drivers.gtk import Gtk
 
 scenarios("features/button_realization.feature")
 
@@ -31,6 +32,7 @@ def then_the_button_should_have_the_random_text(random_title: Callable[[Hashable
     gtk_window = next(iter(gtk.gtk_windows))
     gtk_button = gtk_window.get_child()
     assert gtk_button is not None
+    assert isinstance(gtk_button, Gtk.Button)
     assert gtk_button.get_label() == random_title("Button")
 
 @given("a UI DOM structure with a Window and a Button with a click callback")

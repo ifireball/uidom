@@ -4,6 +4,7 @@
         "cfparse",
         "datatable",
         "psygnal",
+        "pygobject",
         "pytest",
         "uidom"
     ]

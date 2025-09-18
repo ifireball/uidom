@@ -2,6 +2,9 @@ version = 1
 revision = 3
 requires-python = ">=3.11"
 
+[manifest]
+build-constraints = [{ name = "pygobject-stubs", extras = ["gtk4", "gdk4"] }]
+
 [[package]]
 name = "colorama"
 version = "0.4.6"
@@ -191,6 +194,12 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/14/4a/69211cbd13b48f00f2e4bdeb6f2c3867854987e2727b1853b7d1b624d6e0/pygobject-3.54.0.tar.gz", hash = "sha256:4652a7cc7ff950a5099d56ac61a78c144629c20f8855a1306933b46b10f3b417", size = 1271756, upload-time = "2025-09-06T13:24:24.524Z" }
 
 [[package]]
+name = "pygobject-stubs"
+version = "2.13.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d1/3f/d9a43ab76ad7a2d6d3a2968513b76760100c33128c6a0d3ac996dfb37c77/pygobject_stubs-2.13.0.tar.gz", hash = "sha256:4f608f5dfe10c3173f0a082416e22e27b693743c2a635de245c78a51458e2ab6", size = 870193, upload-time = "2025-03-13T21:22:38.156Z" }
+
+[[package]]
 name = "pytest"
 version = "8.4.2"
 source = { registry = "https://pypi.org/simple" }
@@ -253,6 +262,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "pygobject-stubs" },
     { name = "pytest" },
     { name = "pytest-bdd" },
 ]
@@ -265,6 +275,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "pygobject-stubs", specifier = ">=2.13.0" },
     { name = "pytest", specifier = ">=8.4.2" },
     { name = "pytest-bdd", specifier = ">=8.1.0" },
 ]
