@@ -7,10 +7,11 @@ def print_layout(model: Visitable) -> str:
 
 def print_widget_layout(model: Visitable, *args: str) -> str:
     if isinstance(model, Button):
+        border_length = len(model.text) + 2
         return "\n".join((
-            f"/----------\\",
+            f"/{'-' * border_length}\\",
             f"| {model.text} |",
-            f"\\----------/"
+            f"\\{'-' * border_length}/"
         ))
     return ""
 

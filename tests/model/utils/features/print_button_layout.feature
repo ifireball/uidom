@@ -13,3 +13,16 @@ Feature: Print Button Layout
             | Button 1 |
             \----------/
             """
+
+    Scenario: Print the layout of a simple button with a different text
+        Given a button with the following text
+            """
+            A different Button
+            """
+        When the layout is printed
+        Then the following layout should be printed
+            """
+            /--------------------\
+            | A different Button |
+            \--------------------/
+            """
