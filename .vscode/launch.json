@@ -21,6 +21,15 @@
                 "${file}"
             ],
             "justMyCode": false
+        },
+        {
+            "name": "Python Debugger: Pytest",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.venv/bin/pytest",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}"
         }
     ]
 }
