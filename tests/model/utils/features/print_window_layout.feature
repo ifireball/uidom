@@ -19,3 +19,22 @@ Feature: Print Window Layout
             #\-------------/#
             #################
             """
+
+    Scenario: Print the layout of a window with a button when the title sets the size
+        Given a button with the following text
+            """
+            Button 1
+            """
+        And it is embedded in a window with the following title
+            """
+            Window with a long title
+            """
+        When the layout is printed
+        Then the following layout should be printed
+            """
+            ## Window with a long title ##
+            #/--------------------------\#
+            #|         Button 1         |#
+            #\--------------------------/#
+            ##############################
+            """
