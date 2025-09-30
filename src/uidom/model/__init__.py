@@ -1,3 +1,3 @@
 from .application import Application
 from .window import Window
-from .widgets import Button, StringDisplay
+from .widgets import Widget, Button, StringDisplay
