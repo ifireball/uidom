@@ -2,7 +2,7 @@ from math import ceil, floor
 from uidom.model import Button, Window, Widget
 from uidom.model.utils.objrefkey import objRefKeySet, ObjRefKeyMaker, ObjRefKey
 from functools import singledispatchmethod
-from constraint import AllEqualConstraint, Problem
+from constraint import AllEqualConstraint, Problem, MinConflictsSolver
 from uidom.model.utils.center import center
 
 def print_layout(model: Widget|Window) -> str:
@@ -37,11 +37,10 @@ class LayoutPrinter:
 
     @_print_widget_layout.register
     def _(self, model: Window, *args: str) -> str:
-        content = args[0]
         model_width = self._width(model)
         return "\n".join((
             center(f" {model.title} ", model_width, '#'),
-            *(f"#{line}#" for line in content.splitlines()),
+            *(f"#{line}#" for arg in args for line in arg.splitlines()),
             f"{'#' * (model_width)}"
         ))
 
@@ -57,9 +56,9 @@ class LayoutPrinter:
         if self._modelSizes:
             return
         self._model.visit(self._get_widget_size_constraints)
-        # solution = self._sizeProblem.getSolution()
-        solutions = self._sizeProblem.getSolutions()
-        solution = min(solutions, key=lambda sol: sol[self._wk(self._model)])
+        solution = self._sizeProblem.getSolution()
+        #solutions = self._sizeProblem.getSolutionIter()
+        #solution = min(solutions, key=lambda sol: sol[self._wk(self._model)])
         if not solution:
             raise RuntimeError("No solution found for the widget size problem")
         self._modelSizes.update((k, v) for (k, v) in solution.items())
@@ -70,14 +69,17 @@ class LayoutPrinter:
 
     @_get_widget_size_constraints.register
     def _(self, model: Button, *args: Widget|Window) -> Widget|Window:
-        self._sizeProblem.addVariable(self._wk(model), range(len(model.text) + 4, _MAX_WIDGET_WIDTH))
-        self._sizeProblem.addVariable(self._hk(model), range(3, _MAX_WIDGET_HEIGHT))
+        # Note: it seems python-constrain checks the domains in reverse order,
+        # so in order to make the first solution found to contain the smallest
+        # width and height, we need to add the smallest values last
+        self._sizeProblem.addVariable(self._wk(model), range(_MAX_WIDGET_WIDTH, len(model.text) + 4 - 1, -1))
+        self._sizeProblem.addVariable(self._hk(model), range(_MAX_WIDGET_HEIGHT, 2, -1))
         return model
 
     @_get_widget_size_constraints.register
     def _(self, model: Window, *args: Widget|Window) -> Widget|Window:
-        self._sizeProblem.addVariable(self._wk(model), range(len(model.title) + 6, _MAX_WIDGET_WIDTH))
-        self._sizeProblem.addVariable(self._hk(model), range(3, _MAX_WIDGET_HEIGHT))
+        self._sizeProblem.addVariable(self._wk(model), range(_MAX_WIDGET_WIDTH, len(model.title) + 6 - 1, -1))
+        self._sizeProblem.addVariable(self._hk(model), range(_MAX_WIDGET_HEIGHT, 2, -1))
         if args:
             self._sizeProblem.addConstraint(AllEqualConstraint(), [self._wk(arg) for arg in args])
             self._sizeProblem.addConstraint(lambda win_w, widg_w: win_w == widg_w + 2, [self._wk(model), self._wk(args[0])])

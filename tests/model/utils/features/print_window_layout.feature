@@ -38,3 +38,29 @@ Feature: Print Window Layout
             #\--------------------------/#
             ##############################
             """
+
+    Scenario: Print the layout of a window with multiple buttons
+        Given a button with the following text
+            """
+            Button
+            """
+        And a button with the following text
+            """
+            Another Button
+            """
+        And it is embedded in a window with the following title
+            """
+            Window 1
+            """
+        When the layout is printed
+        Then the following layout should be printed
+            """
+            ##### Window 1 #####
+            #/----------------\#
+            #|     Button     |#
+            #\----------------/#
+            #/----------------\#
+            #| Another Button |#
+            #\----------------/#
+            ####################
+            """
