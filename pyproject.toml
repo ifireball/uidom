@@ -5,9 +5,9 @@ description = "Dom-like model for UI"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "cpmpy>=0.9.26",
     "psygnal>=0.14.1",
     "PyGObject>=3.46.0",
-    "python-constraint>=1.4.0",
 ]
 
 [dependency-groups]
