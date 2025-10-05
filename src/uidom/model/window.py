@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import FrozenSet, TypeVar
 from .widgets import Widget
-from .layouts import Layout, ColumnLayout
 from .utils import Visitor
+from .style import Style
 
 T = TypeVar("T")
 
@@ -13,7 +13,7 @@ class Window:
     """
     title: str = ""
     widgets: tuple[Widget, ...] = ()
-    layout: Layout = ColumnLayout()
+    style: Style = Style()
 
     def visit(self, visitor: Visitor[T]) -> T:
         return visitor(self, *(widget.visit(visitor) for widget in self.widgets))

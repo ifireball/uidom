@@ -1,6 +1,7 @@
 import pytest
 from pytest_bdd import given, when, then, scenarios
 from uidom.model import Button, Widget, Window
+from uidom.model.style import Style
 from uidom.model.layouts import GridLayout
 from uidom.model.utils.print import print_layout
 from typing import Callable
@@ -27,7 +28,7 @@ def given_a_button(widgets: list[Widget|Window], enumerated_title: Callable[[str
 def given_it_is_embedded_in_a_window(widgets: list[Widget|Window], enumerated_title: Callable[[str], str]) -> None:
     window_widgets = tuple(w for w in widgets if isinstance(w, Widget))
     widgets.clear()
-    widgets.append(Window(title=enumerated_title("Window"), widgets=window_widgets, layout=GridLayout()))
+    widgets.append(Window(title=enumerated_title("Window"), widgets=window_widgets, style=Style(layout=GridLayout())))
 
 @given("it is embedded in a window with the following title")
 def given_it_is_embedded_in_a_window_with_the_following_title(docstring: str, widgets: list[Widget|Window]) -> None:

@@ -54,7 +54,7 @@ class ModelPositioner:
                 pass
             case Window():
                 if args:
-                    match model.layout:
+                    match model.style.layout:
                         case GridLayout(size=size):
                             columns = size
                         case _:
