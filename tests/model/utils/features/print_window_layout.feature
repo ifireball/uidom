@@ -64,3 +64,21 @@ Feature: Print Window Layout
             #\----------------/#
             ####################
             """
+
+    Scenario: Print a window with grid layout
+        Given a button
+        And a button
+        And another button
+        And it is embedded in a window with a grid layout
+        When the layout is printed
+        Then the following layout should be printed
+            """
+            ######## Window 0 ########
+            #/----------\/----------\#
+            #| Button 0 || Button 1 |#
+            #\----------/\----------/#
+            #/----------\            #
+            #| Button 2 |            #
+            #\----------/            #
+            ##########################
+            """

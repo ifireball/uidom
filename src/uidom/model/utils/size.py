@@ -1,13 +1,15 @@
 from functools import cache
 from typing import Callable
+from more_itertools import chunked
 import cpmpy as cp
 from cpmpy.expressions.variables import _IntVarImpl
 from uidom.model import Widget, Window, Button
+from uidom.model.layouts import GridLayout
 from uidom.model.utils import Visitable
 
 
-_MAX_WIDGET_WIDTH = 80
-_MAX_WIDGET_HEIGHT = 40
+MAX_WIDGET_WIDTH = 80
+MAX_WIDGET_HEIGHT = 40
 
 
 class ModelSizer:
@@ -43,7 +45,7 @@ class ModelSizer:
         if self._cp_model.solve():
             self._cp_model_solved = True
             return
-        raise ValueError(f"Failed to determine widget sizes for model, does it fit in ({_MAX_WIDGET_WIDTH}x{_MAX_WIDGET_HEIGHT})?")     
+        raise ValueError(f"Failed to determine widget sizes for model, does it fit in ({MAX_WIDGET_WIDTH}x{MAX_WIDGET_HEIGHT})?")     
 
     def _get_widget_size_constraints(self, model: Visitable, *args: Visitable) -> Visitable:
         match model:
@@ -51,8 +53,14 @@ class ModelSizer:
                 pass
             case Window():
                 if args:
-                    self._cp_model += cp.AllEqual(self._wv(model) - 2, *(self._wv(arg) for arg in args))
-                    self._cp_model += self._hv(model) == sum(self._hv(arg) for arg in args) + 2 
+                    match model.layout:
+                        case GridLayout(size=size):
+                            columns = size
+                        case _:
+                            columns = 1
+
+                    self._cp_model += cp.AllEqual((self._wv(model) - 2) // columns, *(self._wv(arg) for arg in args))
+                    self._cp_model += self._hv(model) == cp.sum(cp.max(self._hv(arg) for arg in chunk) for chunk in chunked(args, columns)) + 2 
             case _:
                 raise NotImplementedError(f"Getting the size constraints of {model.__class__.__name__} is not implemented")
         return model
@@ -61,9 +69,9 @@ class ModelSizer:
     def _mk_width_var(model: Visitable) -> _IntVarImpl:
         match model:
             case Button():
-                var = cp.intvar(len(model.text) + 4, _MAX_WIDGET_WIDTH)
+                var = cp.intvar(len(model.text) + 4, MAX_WIDGET_WIDTH)
             case Window():
-                var = cp.intvar(len(model.title) + 6, _MAX_WIDGET_WIDTH)
+                var = cp.intvar(len(model.title) + 6, MAX_WIDGET_WIDTH)
             case _:
                 raise ValueError(f"Unknown model type: {model.__class__.__name__}")
         assert isinstance(var, _IntVarImpl)
@@ -73,9 +81,9 @@ class ModelSizer:
     def _mk_height_var(model: Visitable) -> _IntVarImpl:
         match model:
             case Button():
-                var = cp.intvar(3, _MAX_WIDGET_HEIGHT)
+                var = cp.intvar(3, MAX_WIDGET_HEIGHT)
             case Window():
-                var = cp.intvar(3, _MAX_WIDGET_HEIGHT)
+                var = cp.intvar(3, MAX_WIDGET_HEIGHT)
             case _:
                 raise ValueError(f"Unknown model type: {model.__class__.__name__}")
         assert isinstance(var, _IntVarImpl)

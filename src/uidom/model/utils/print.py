@@ -1,47 +1,50 @@
-from math import ceil, floor
+from typing import Any
 from uidom.model import Button, Window, Widget
 from functools import singledispatchmethod
-from uidom.model.utils.center import center
-from uidom.model.utils.size import ModelSizer
+from uidom.model.utils.position import ModelPositioner
+from uidom.model.utils.strcanvas import StrCanvas
 
 def print_layout(model: Widget|Window) -> str:
     return LayoutPrinter(model).print()
 
-_MAX_WIDGET_WIDTH = 80
-_MAX_WIDGET_HEIGHT = 40
+
+_WINDOW_BORDER = b'#' * 8
+_BUTTON_BORDER = rb'/-\|/-\|'
+
 
 class LayoutPrinter:
     def __init__(self, model: Widget|Window):
         self._model = model
-        self._sizer = ModelSizer(model)
+        self._positioner = ModelPositioner(model)
+        self._canvas = StrCanvas(self._width(model), self._height(model))
 
     def print(self) -> str:
-        return self._model.visit(self._print_widget_layout)
+        self._model.visit(self._print_widget_layout)
+        return str(self._canvas)
 
     @singledispatchmethod
-    def _print_widget_layout(self, model: Widget|Window, *args: str) -> str:
+    def _print_widget_layout(self, model: Widget|Window, *_: Any) -> None:
         raise NotImplementedError(f"Printing the layout of {model.__class__.__name__} is not implemented")
 
     @_print_widget_layout.register
-    def _(self, model: Button, *args: str) -> str:
-        border_length = self._width(model) - 2
-        return "\n".join((
-            f"/{'-' * border_length}\\",
-            f"|{center(model.text, border_length)}|",
-            f"\\{'-' * border_length}/"
-        ))
+    def _(self, model: Button, *_: Any) -> None:
+        self._canvas.draw_border(self._left(model), self._top(model), self._width(model), self._height(model), border=_BUTTON_BORDER)
+        self._canvas.draw_text(self._left(model) + 1, self._top(model) + 1, model.text.center(self._width(model) - 2, ' '))
 
     @_print_widget_layout.register
-    def _(self, model: Window, *args: str) -> str:
+    def _(self, model: Window, *_: Any) -> None:
         model_width = self._width(model)
-        return "\n".join((
-            center(f" {model.title} ", model_width, '#'),
-            *(f"#{line}#" for arg in args for line in arg.splitlines()),
-            f"{'#' * (model_width)}"
-        ))
+        self._canvas.draw_border(self._left(model), self._top(model), model_width, self._height(model), border=_WINDOW_BORDER)
+        self._canvas.draw_text(self._left(model), self._top(model), f" {model.title} ".center(model_width, '#'))
 
     def _width(self, model: Widget|Window) -> int:
-        return self._sizer.width(model)
+        return self._positioner.width(model)
     
     def _height(self, model: Widget|Window) -> int:
-        return self._sizer.height(model)
+        return self._positioner.height(model)
+    
+    def _left(self, model: Widget|Window) -> int:
+        return self._positioner.left(model)
+    
+    def _top(self, model: Widget|Window) -> int:
+        return self._positioner.top(model)

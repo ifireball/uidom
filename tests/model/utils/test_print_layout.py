@@ -1,7 +1,9 @@
 import pytest
 from pytest_bdd import given, when, then, scenarios
 from uidom.model import Button, Widget, Window
+from uidom.model.layouts import GridLayout
 from uidom.model.utils.print import print_layout
+from typing import Callable
 
 scenarios(
     "features/print_button_layout.feature",
@@ -16,6 +18,17 @@ def widgets() -> list[Widget|Window]:
 def given_a_button_with_the_following_text(docstring: str, widgets: list[Widget|Window]) -> None:
     widgets.append(Button(text=docstring))
 
+@given("a button")
+@given("another button")
+def given_a_button(widgets: list[Widget|Window], enumerated_title: Callable[[str], str]) -> None:
+    widgets.append(Button(text=enumerated_title("Button")))
+
+@given("it is embedded in a window with a grid layout")
+def given_it_is_embedded_in_a_window(widgets: list[Widget|Window], enumerated_title: Callable[[str], str]) -> None:
+    window_widgets = tuple(w for w in widgets if isinstance(w, Widget))
+    widgets.clear()
+    widgets.append(Window(title=enumerated_title("Window"), widgets=window_widgets, layout=GridLayout()))
+
 @given("it is embedded in a window with the following title")
 def given_it_is_embedded_in_a_window_with_the_following_title(docstring: str, widgets: list[Widget|Window]) -> None:
     window_widgets = tuple(w for w in widgets if isinstance(w, Widget))
@@ -29,4 +42,4 @@ def when_the_layout_is_printed(widgets: list[Widget|Window]) -> str:
 
 @then("the following layout should be printed")
 def then_the_following_layout_should_be_printed(docstring: str, printed_layout: str) -> None:
-    assert docstring == printed_layout
+    assert printed_layout == docstring

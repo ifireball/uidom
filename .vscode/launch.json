@@ -30,6 +30,19 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Python Debugger: Doctest",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.venv/bin/pytest",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--doctest-modules",
+                "src/"
+            ]
         }
     ]
 }
