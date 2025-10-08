@@ -5,7 +5,8 @@ import cpmpy as cp
 from cpmpy.expressions.variables import _IntVarImpl
 from uidom.model import Widget, Window, Button
 from uidom.model.layouts import GridLayout
-from uidom.model.utils import Visitable, colspan
+from uidom.model.utils import Visitable
+from uidom.model.utils.style import colspan
 
 
 MAX_WIDGET_WIDTH = 80

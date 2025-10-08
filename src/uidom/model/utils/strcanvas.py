@@ -52,5 +52,7 @@ class StrCanvas:
         return self
 
     def _blit_column(self, x: int, y: int, column: bytes|bytearray|memoryview) -> StrCanvas:
-        self.canvas[y*self.width+x:(y+len(column))*self.width+x:self.width] = column
+        if y >= self.height:
+            return self
+        self.canvas[y*self.width+x:(y+len(column))*self.width+x:self.width] = column[0:min(len(column), self.height - y)]
         return self

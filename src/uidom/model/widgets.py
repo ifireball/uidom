@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 from typing import TypeVar
-from .utils import Visitor
+from .utils.visit import Visitor
 from .style import Styleable
 
 T = TypeVar("T")

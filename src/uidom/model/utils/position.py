@@ -7,13 +7,14 @@ from .size import MAX_WIDGET_WIDTH, MAX_WIDGET_HEIGHT, ModelSizer
 from .visit import Visitable
 from more_itertools import chunked
 from uidom.model.layouts import GridLayout
+from uidom.model.utils.style import colspan
 
 class ModelPositioner:
     def __init__(self, model: Widget|Window):
         self._model = model
         self._sizer = ModelSizer(model)
-        self._tv: Callable[[Visitable], _IntVarImpl] = cache(self._mk_left_var)
-        self._lv: Callable[[Visitable], _IntVarImpl] = cache(self._mk_top_var)
+        self._lv: Callable[[Visitable], _IntVarImpl] = cache(self._mk_left_var)
+        self._tv: Callable[[Visitable], _IntVarImpl] = cache(self._mk_top_var)
         self._cp_model = cp.Model()
         self._cp_model_solved = False
 
@@ -61,15 +62,18 @@ class ModelPositioner:
                             columns = 1
                         
                     top = 1
-                    for row in chunked(args, columns):
-                        left = 1
-                        for widget in row:
-                            self._cp_model += self._lv(widget) == left
-                            self._cp_model += self._tv(widget) == top
-                            assert isinstance(widget, Widget)
-                            left += self.width(widget)
-                        assert isinstance(row[0], Widget)
-                        top += self.height(row[0])
+                    left = 1
+                    column = 0
+                    for widget in args:
+                        assert isinstance(widget, Widget)
+                        self._cp_model += self._lv(widget) == left
+                        self._cp_model += self._tv(widget) == top
+                        left += self.width(widget)
+                        column += colspan(widget)
+                        if column == columns:
+                            column = 0
+                            top += self.height(widget)
+                            left = 1
             case _:
                 raise NotImplementedError(f"Getting the position constraints of {model.__class__.__name__} is not implemented")
         return model
