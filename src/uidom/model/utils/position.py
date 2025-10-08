@@ -4,7 +4,7 @@ import cpmpy as cp
 from cpmpy.expressions.variables import _IntVarImpl
 from uidom.model import Widget, Window, Button
 from .size import MAX_WIDGET_WIDTH, MAX_WIDGET_HEIGHT, ModelSizer
-from .visit import Visitor, Visitable
+from .visit import Visitable
 from more_itertools import chunked
 from uidom.model.layouts import GridLayout
 

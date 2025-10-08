@@ -3,6 +3,7 @@ from pytest_bdd import given, when, then, scenarios
 from uidom.model import Button, Widget, Window
 from uidom.model.style import Style
 from uidom.model.layouts import GridLayout
+from uidom.model.positions import GridPosition
 from uidom.model.utils.print import print_layout
 from typing import Callable
 
@@ -23,6 +24,10 @@ def given_a_button_with_the_following_text(docstring: str, widgets: list[Widget|
 @given("another button")
 def given_a_button(widgets: list[Widget|Window], enumerated_title: Callable[[str], str]) -> None:
     widgets.append(Button(text=enumerated_title("Button")))
+
+@given("another button with horizontal span of 2")
+def given_another_button_with_horizontal_span_of_2(widgets: list[Widget|Window], enumerated_title: Callable[[str], str]) -> None:
+    widgets.append(Button(text=enumerated_title("Button"), style=Style(position=GridPosition(horizontal_span=2))))
 
 @given("it is embedded in a window with a grid layout")
 def given_it_is_embedded_in_a_window(widgets: list[Widget|Window], enumerated_title: Callable[[str], str]) -> None:

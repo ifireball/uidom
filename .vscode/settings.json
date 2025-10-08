@@ -6,6 +6,7 @@
         "psygnal",
         "pygobject",
         "pytest",
+        "Styleable",
         "uidom"
     ]
 }

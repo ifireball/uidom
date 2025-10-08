@@ -5,7 +5,7 @@ import cpmpy as cp
 from cpmpy.expressions.variables import _IntVarImpl
 from uidom.model import Widget, Window, Button
 from uidom.model.layouts import GridLayout
-from uidom.model.utils import Visitable
+from uidom.model.utils import Visitable, colspan
 
 
 MAX_WIDGET_WIDTH = 80
@@ -59,7 +59,7 @@ class ModelSizer:
                         case _:
                             columns = 1
 
-                    self._cp_model += cp.AllEqual((self._wv(model) - 2) // columns, *(self._wv(arg) for arg in args))
+                    self._cp_model += cp.AllEqual((self._wv(model) - 2) // columns, *(self._wv(arg) // colspan(arg) for arg in args))
                     self._cp_model += self._hv(model) == cp.sum(cp.max(self._hv(arg) for arg in chunk) for chunk in chunked(args, columns)) + 2 
             case _:
                 raise NotImplementedError(f"Getting the size constraints of {model.__class__.__name__} is not implemented")
